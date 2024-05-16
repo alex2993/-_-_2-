@@ -1,0 +1,46 @@
+CREATE TABLE clients (
+    id_client INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR (100) NOT NULL,
+    login VARCHAR (20) NOT NULL,
+    password VARCHAR (12) NOT NULL,
+    number VARCHAR (11) NOT NULL
+);
+
+CREATE TABLE order (
+    id_order INT NOT NULL AUTO_INCREMENT PRIMARY KEY,,
+    data DATE NOT NULL,
+    price INT NOT NULL,
+    status VARCHAR(40) NOT NULL,
+    id_client INT NOT NULL,
+    pay_method VARCHAR(30) NOT NULL,
+    id_PVZ INT NOT NULL,
+    FOREIGN KEY (id_client) REFERENCES clients(id_client),
+    FOREIGN KEY (id_PVZ) REFERENCES PVZ(id_PVZ)
+);
+
+CREATE TABLE product (
+    id_product INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nazv VARCHAR (100) NOT NULL,
+    price INT NOT NULL,
+    vendor_code INT NOT NULL
+);
+
+CREATE TABLE fields_order (
+    id_fields INT NOT NULL AUTO_INCREMENT PRIMARY KEY,,
+    count INT NOT NULL,
+    nazv VARCHAR(100) NOT NULL,
+    id_order INT NOT NULL,
+    id_product INT NOT NULL,
+    FOREIGN KEY (id_order) REFERENCES order(id_order),
+    FOREIGN KEY (id_product) REFERENCES product(id_product)
+);
+
+CREATE TABLE PVZ (
+    id_PVZ INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_order INT NOT NULL,
+    nazv VARCHAR (100) NOT NULL,
+    FOREIGN KEY (id_order) REFERENCES order(id_order)
+);
+
+
+
