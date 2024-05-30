@@ -1,0 +1,86 @@
+CREATE TABLE clients (
+    id_client INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR (100) NOT NULL,
+    login VARCHAR (20) NOT NULL,
+    password VARCHAR (12) NOT NULL,
+    number VARCHAR (11) NOT NULL
+);
+
+CREATE TABLE orders (
+    id_order INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    data DATE NOT NULL,
+    price INT NOT NULL,
+    status VARCHAR(40) NOT NULL,
+    id_client INT NOT NULL,
+    FOREIGN KEY (id_client) REFERENCES clients(id_client),
+);
+
+CREATE TABLE product (
+    id_product INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nazv VARCHAR (100) NOT NULL,
+    price INT NOT NULL,
+    vendor_code INT NOT NULL
+);
+
+CREATE TABLE fields_order (
+    id_fields INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    counts INT NOT NULL,
+    nazv VARCHAR(100) NOT NULL,
+    id_order INT NOT NULL,
+    id_product INT NOT NULL,
+    FOREIGN KEY (id_order) REFERENCES orders(id_order),
+    FOREIGN KEY (id_product) REFERENCES product(id_product)
+);
+
+
+INSERT INTO clients (name, login, password, number) VALUES
+('Иван Иванов', 'ivan123', 'password123', '12345678901'),
+('Мария Петрова', 'maria456', 'pass456', '98765432101'),
+('Алексей Смирнов', 'alex789', 'securepass', '56789012345'),
+('Екатерина Кузнецова', 'katya111', 'qwerty', '78901234567'),
+('Дмитрий Новиков', 'dima222', '123456', '01234567890');
+
+
+INSERT INTO orders (data, price, status, id_client) VALUES
+('2024-05-20', 500, 'В обработке', 1),
+('2024-05-21', 700, 'Доставлен', 2),
+('2024-05-22', 900, 'В пути', 3),
+('2024-05-23', 1200, 'В обработке', 4),
+('2024-05-24', 1500, 'В пути', 5);
+
+INSERT INTO product (nazv, price, vendor_code) VALUES
+('Телефон', 10000, 123456),
+('Ноутбук', 30000, 789012),
+('Наушники', 5000, 345678),
+('Фотоаппарат', 20000, 901234),
+('Планшет', 15000, 567890);
+
+INSERT INTO fields_order (counts, nazv, id_order, id_product) VALUES
+(2, 'Телефон', 1, 1),
+(1, 'Ноутбук', 2, 2),
+(3, 'Наушники', 3, 3),
+(1, 'Фотоаппарат', 4, 4),
+(2, 'Планшет', 5, 5);
+
+
+ПРОСТЫЕ ЗАПРОСЫ
+
+Выбрать всех клиентов: SELECT * FROM clients;
+
+Выбрать все заказы с их статусами: SELECT id_order, status FROM orders;
+
+Выбрать все товары: SELECT * FROM product;
+
+СЛОЖНЫЕ ЗАПРОСЫ
+
+Выбрать все заказы клиента с его именем и датой заказа: SELECT c.name, o.id_order, o.data FROM clients c JOIN orders o ON
+c.id_client = o.id_client;
+
+Посчитать суммарную стоимость каждого заказа: SELECT id_order, SUM(price) AS total_price FROM orders GROUP BY id_order;
+
+Выбрать все товары из заказов с указанием количества и общей стоимости каждого товара: SELECT o.id_order, p.nazv AS 
+product_name, fo.counts, p.price AS unit_price, (fo.counts * p.price) AS total_price
+FROM orders o JOIN fields_order fo ON o.id_order = fo.id_order JOIN product p ON fo.id_product = p.id_product;
+
+
+
